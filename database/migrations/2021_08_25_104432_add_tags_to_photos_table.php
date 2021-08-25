@@ -14,7 +14,7 @@ class AddTagsToPhotosTable extends Migration
     public function up()
     {
         Schema::table('photos', function (Blueprint $table) {
-            $table->json('tags')->default("[]");
+            $table->json('tags');
         });
     }
 

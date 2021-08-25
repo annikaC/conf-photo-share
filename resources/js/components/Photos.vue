@@ -7,7 +7,7 @@
                 <div v-for="photo in partition" :key="photo.id">
                     <img :src="photo.url" class="w-full mt-4 object-cover rounded-lg" />
                     <h3>Uploaded: {{(photo.author) ? photo.author : 'A mystery spy'}}</h3>
-                    <ul v-for="tag in photo.tags" :key="tag.value" class="tags">
+                    <ul v-for="tag in getTags(photo)" :key="tag.value" class="tags">
                         <li>{{tag}}</li>
                     </ul>
                 </div>
@@ -54,6 +54,20 @@ export default {
                     return (index - 1) % size;
                 }
             );
+        },
+
+        getTags(photo) {
+            if (!photo.tags) {
+                return [];
+            }
+
+            let parse = JSON.parse(photo.tags);
+
+            if (!parse) {
+                return [];
+            }
+
+            return parse.split(',');
         },
 
         async loadPhotos() {
