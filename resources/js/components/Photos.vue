@@ -5,8 +5,16 @@
         <PhotoUpload />
 
         <div class="grid-cols-3 gap-4 hidden md:grid">
-            <div v-for="partition in partitionedPhotos3">
-                <img :src="photo.url" class="w-full mt-4 object-cover rounded-lg" v-for="photo in partition"/>
+            <div v-for="partition in partitionedPhotos">
+                <div v-for="photo in partition" :key="photo.id">
+                    <img :src="photo.url" class="w-full mt-4 object-cover rounded-lg" />
+                    <h3>Uploaded by - Upload Name</h3>
+                    <ul class="tags">
+                        <li> Tag 1 </li>
+                        <li> Tag 2 </li>
+                        <li> Tag 3 </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -30,13 +38,9 @@ export default {
         this.setupWebsockets();
     },
     computed: {
-        partitionedPhotos3() {
+        partitionedPhotos() {
             return this.partition(this.photos, 3);
-        },
-
-        partitionedPhotos2() {
-            return this.partition(this.photos, 2);
-        },
+        }
     },
     methods: {
         partition(photos, size) {
@@ -85,7 +89,13 @@ export default {
 </script>
 
 <style scoped>
-.text-3xl {
-    color: pink;
+.tags {
+    display: inline-flex;
+}
+.tags li {
+    padding: 6px;
+    background: pink;
+    border-radius: 6px;
+    margin: 0 4px 0 0;
 }
 </style>
