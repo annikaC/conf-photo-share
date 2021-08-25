@@ -48,6 +48,9 @@
                     </button>
                 </li>
             </ul>
+            <tag-input
+            v-model="tags"
+            />
 
             <button :disabled="uploadDisabled"
                     @click="upload"
@@ -60,8 +63,12 @@
 </template>
 
 <script>
+import TagInput from './TagInput';
 export default {
     name: 'PhotoUpload',
+    components: {
+        TagInput
+    },
 
     filters: {
         kb: function (value) {
@@ -73,6 +80,7 @@ export default {
         return {
             files: [],
             authorName: '',
+            tags: ['hello', 'world'],
             uploading: false,
         };
     },
@@ -135,6 +143,7 @@ export default {
 
             formData.append('file', this.files[0]);
             formData.append('author', this.authorName);
+            formData.append('tags', this.tags);
 
             this.uploading = true;
 

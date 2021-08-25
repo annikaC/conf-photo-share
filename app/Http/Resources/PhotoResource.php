@@ -19,6 +19,7 @@ class PhotoResource extends JsonResource
             'id' => $this->id,
             'url' => Storage::disk('s3')->temporaryUrl($this->s3_path, now()->addMinutes(5)),
             'author' => $this->author,
+            'tags' => $this->tags,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
