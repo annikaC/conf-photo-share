@@ -14,7 +14,7 @@
             @endif
 
             <div class="bg-white rounded shadow-lg">
-                <div class="p-4 bg-gray-800 rounded-t">
+                <div class="p-4 bg-blue-700 rounded-t">
                     <span class="text-white font-bold">Admin Section</span>
                 </div>
 
