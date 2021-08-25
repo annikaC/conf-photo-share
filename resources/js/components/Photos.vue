@@ -6,7 +6,7 @@
             <div v-for="partition in partitionedPhotos" :key="partition.id">
                 <div v-for="photo in partition" :key="photo.id">
                     <img :src="photo.url" class="w-full mt-4 object-cover rounded-lg" />
-                    <h3>Uploaded: {{(photo.author) ? photo.author : 'A mystery spy'}}</h3>
+                    <h3 class="p-2">Uploaded by {{(photo.author) ? photo.author : 'a mystery spy... 🕵️'}}</h3>
                     <ul class="tags">
                         <li> Tag 1 </li>
                         <li> Tag 2 </li>
