@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white rounded-none sm:rounded shadow-lg mt-8" v-cloak @drop.prevent="addFile"
          @dragover.prevent>
-        <div class="p-4 font-bold bg-gray-800 rounded-none sm:rounded-t text-white">
+        <div class="p-4 font-bold bg-blue-700 rounded-none sm:rounded-t text-white">
             Upload Photo
         </div>
 

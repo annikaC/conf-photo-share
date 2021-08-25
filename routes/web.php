@@ -22,14 +22,15 @@ use Illuminate\Routing\Router;
 /** @var Router $router */
 
 $router->view('/', 'welcome')->name('home');
-$router->view('/qa', 'qa.index')->name('qa.index');
-
 $router->resource('photos', PhotoController::class)->only('index', 'create', 'store');
-$router->apiResource('questions', QuestionController::class)->except('destroy');
 
-$router->post('/questions/{question}/vote', QuestionVoteController::class . '@store');
+// Remove QA routes.
+//$router->view('/qa', 'qa.index')->name('qa.index');
+//$router->apiResource('questions', QuestionController::class)->except('destroy');
+//$router->post('/questions/{question}/vote', QuestionVoteController::class . '@store');
 
 $router->get('auth/login', LoginController::class . '@index')->name('auth.login');
+$router->get('auth/logout', LoginController::class . '@logout')->name('auth.logout');
 $router->post('auth/login', LoginController::class . '@attempt');
 
 $router->middleware('auth:web')->group(
