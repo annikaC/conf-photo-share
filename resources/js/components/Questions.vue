@@ -160,7 +160,27 @@ export default {
 </script>
 
 <style>
-.question-list-move {
-    transition: transform 1s;
-}
+
+    .heading {
+        font-family: Arial, Helvetica, sans-serif;
+        color: grey;
+        border-bottom: 1px solid #6c757d;
+        padding: 10px;
+    }
+
+    .input-text {
+        color: #000;
+    }
+
+    .button-box {
+        //align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+        width: 60%;
+    }
+
+    .button {
+        background-color: orange;
+        width: 60%;
+    }
 </style>
