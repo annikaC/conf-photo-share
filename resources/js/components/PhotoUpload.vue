@@ -21,7 +21,15 @@
             </div>
 
             <input id="fileInput" ref="fileInput" type="file" class="hidden" v-on:change="addFile"/>
-
+            <label for="authorInput">Author Name</label>
+            <input
+                id="authorInput"
+                ref="authorInput"
+                class="frounded bg-gray-300"
+                type="text"
+                placeholder="enter author"
+                v-model="authorName"
+            />
             <ul>
                 <li v-for="file in files" class="bg-gray-100 p-2 mt-1 rounded flex">
                     <span class="flex-grow w-0 break-words">
@@ -61,6 +69,7 @@ export default {
     data() {
         return {
             files: [],
+            authorName: '',
             uploading: false,
         };
     },
@@ -122,6 +131,7 @@ export default {
             }
 
             formData.append('file', this.files[0]);
+            formData.append('author', this.authorName);
 
             this.uploading = true;
 

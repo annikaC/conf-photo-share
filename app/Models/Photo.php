@@ -11,6 +11,7 @@ class Photo extends Model
      */
     protected $fillable = [
         's3_path',
+        'author',
         'size',
         'mime'
     ];
