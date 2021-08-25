@@ -1,14 +1,19 @@
 <template>
     <div class="p-6">
-        <PhotoUpload />
+        <PhotoUpload/>
 
         <div class="grid-cols-3 gap-4 md:grid">
             <div v-for="partition in partitionedPhotos" :key="partition.id">
                 <div v-for="photo in partition" :key="photo.id">
-                    <img :src="photo.url" class="w-full mt-4 object-cover rounded-lg" />
-                    <h3>Uploaded: {{(photo.author) ? photo.author : 'A mystery spy'}}</h3>
+                    <img :src="photo.url" class="w-full mt-4 object-cover rounded-lg"/>
+
+                    <h3 class="p-2">
+                        Uploaded by
+                        {{ photo.author ? photo.author : 'a mystery spy... 🕵️' }}
+                    </h3>
+
                     <ul v-for="tag in getTags(photo)" :key="tag.value" class="tags">
-                        <li>{{tag}}</li>
+                        <li>{{ tag }}</li>
                     </ul>
                 </div>
             </div>
@@ -22,7 +27,7 @@ import PhotoUpload from './PhotoUpload.vue';
 export default {
     name: 'Photos',
     components: {
-        PhotoUpload
+        PhotoUpload,
     },
     data() {
         return {
@@ -36,24 +41,21 @@ export default {
     computed: {
         partitionedPhotos() {
             return this.partition(this.photos, 3);
-        }
+        },
     },
     methods: {
         partition(photos, size) {
             let index = 0;
 
-            return _.groupBy(
-                photos,
-                () => {
-                    if (index === size) {
-                        index = 0;
-                    }
-
-                    index++;
-
-                    return (index - 1) % size;
+            return _.groupBy(photos, () => {
+                if (index === size) {
+                    index = 0;
                 }
-            );
+
+                index++;
+
+                return (index - 1) % size;
+            });
         },
 
         getTags(photo) {
@@ -72,7 +74,7 @@ export default {
 
         async loadPhotos() {
             try {
-                let {data: response} = await axios.get('/photos');
+                let { data: response } = await axios.get('/photos');
 
                 this.photos = response.data;
             } catch (error) {
@@ -92,7 +94,10 @@ export default {
         },
 
         setupWebsockets() {
-            Echo.channel('main-channel').listen('PhotoUploaded', this.handlePhotoUploaded);
+            Echo.channel('main-channel').listen(
+                'PhotoUploaded',
+                this.handlePhotoUploaded,
+            );
         },
     },
 };
@@ -102,6 +107,7 @@ export default {
 .tags {
     display: inline-flex;
 }
+
 .tags li {
     padding: 6px;
     background: pink;

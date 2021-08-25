@@ -26,9 +26,9 @@
                 <input
                     id="authorInput"
                     ref="authorInput"
-                    class="frounded p-1 bg-gray-300"
+                    class="frounded p-1 bg-gray-100"
                     type="text"
-                    placeholder="enter author"
+                    placeholder="Enter author"
                     v-model="authorName"
                 />
             </div>
