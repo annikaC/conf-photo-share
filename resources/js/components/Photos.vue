@@ -59,17 +59,21 @@ export default {
         },
 
         getTags(photo) {
-            if (!photo.tags) {
+            try {
+                if (!photo.tags) {
+                    return [];
+                }
+
+                let parse = JSON.parse(photo.tags);
+
+                if (!parse) {
+                    return [];
+                }
+
+                return parse.split(',');
+            } catch {
                 return [];
             }
-
-            let parse = JSON.parse(photo.tags);
-
-            if (!parse) {
-                return [];
-            }
-
-            return parse.split(',');
         },
 
         async loadPhotos() {
