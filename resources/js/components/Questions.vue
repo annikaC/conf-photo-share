@@ -8,7 +8,7 @@
                    class="py-2 px-4 w-full rounded-l-lg focus:outline-none"
                    v-model="newQuestion"/>
             <button class="w-32 py-2 text-white rounded-r-lg focus:outline-none"
-                    :class="addingQuestion ? 'bg-gray-300' : 'bg-gray-800'"
+                    :class="addingQuestion ? 'bg-gray-300' : 'bg-blue-700'"
                     @click="addQuestion">
                 Add
             </button>
