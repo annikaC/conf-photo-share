@@ -39,6 +39,7 @@ class PhotoController extends Controller
         // Get file info.
         $image = $request->file('file');
         $author = $request->all()['author'];
+        $tags = $request->all()['tags'];
         $name = Uuid::uuid4()->toString();
         $path = 'photo-uploads/' . $name . '.' . $image->getClientOriginalExtension();
 
@@ -47,6 +48,7 @@ class PhotoController extends Controller
             [
                 's3_path' => $path,
                 'author' => $author,
+                'tags' => json_encode($tags),
                 'size' => $image->getSize(),
                 'mime' => $image->getMimeType()
             ]

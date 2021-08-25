@@ -7,10 +7,8 @@
                 <div v-for="photo in partition" :key="photo.id">
                     <img :src="photo.url" class="w-full mt-4 object-cover rounded-lg" />
                     <h3>Uploaded: {{(photo.author) ? photo.author : 'A mystery spy'}}</h3>
-                    <ul class="tags">
-                        <li> Tag 1 </li>
-                        <li> Tag 2 </li>
-                        <li> Tag 3 </li>
+                    <ul v-for="tag in photo.tags" :key="tag.value" class="tags">
+                        <li>{{tag}}</li>
                     </ul>
                 </div>
             </div>
