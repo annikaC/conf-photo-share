@@ -1,14 +1,12 @@
 <template>
     <div class="p-6">
-        <h1 class="text-3xl mb-4">Uploaded Photos</h1>
-
         <PhotoUpload />
 
-        <div class="grid-cols-3 gap-4 hidden md:grid">
-            <div v-for="partition in partitionedPhotos">
+        <div class="grid-cols-3 gap-4 md:grid">
+            <div v-for="partition in partitionedPhotos" :key="partition.id">
                 <div v-for="photo in partition" :key="photo.id">
                     <img :src="photo.url" class="w-full mt-4 object-cover rounded-lg" />
-                    <h3>Uploaded by - Upload Name</h3>
+                    <h3>Uploaded: {{(photo.author) ? photo.author : 'A mystery spy'}}</h3>
                     <ul class="tags">
                         <li> Tag 1 </li>
                         <li> Tag 2 </li>
