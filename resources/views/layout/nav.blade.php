@@ -5,9 +5,19 @@
         </a>
 
         <div class="flex">
-            <a href="{{ route('qa.index') }}" class="p-6 hover:font-bold">
-                <span>Q&A</span>
-            </a>
+            @if(auth()->user())
+                <a href="{{ route('auth.logout') }}" class="p-6 hover:font-bold">
+                    <span>Logout</span>
+                </a>
+            @else
+                <a href="{{ route('auth.login') }}" class="p-6 hover:font-bold">
+                    <span>Login</span>
+                </a>
+
+                <a href="{{ route('auth.login') }}" class="p-6 hover:font-bold">
+                    <span>Register</span>
+                </a>
+            @endif
 
             <a href="{{ route('photos.create') }}" class="p-6 hover:font-bold">
                 <span>Upload</span>

@@ -33,4 +33,14 @@ class LoginController extends Controller
 
         return back()->withErrors(['Incorrect username or password.']);
     }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function logout(): RedirectResponse
+    {
+        auth()->logout();
+
+        return back();
+    }
 }
