@@ -1,12 +1,14 @@
 <template>
-    <div class="upload-container bg-white rounded-none sm:rounded shadow-lg mt-2" v-cloak @drop.prevent="addFile"
-         @dragover.prevent>
+    <div class="upload-container bg-white rounded-none sm:rounded shadow-lg mt-2"
+         @drop.prevent="addFile"
+         @dragover.prevent
+         v-cloak>
         <div class="p-4 font-bold bg-blue-700 rounded-none sm:rounded-t text-white">
             Upload your photo here
         </div>
 
-        <div class="p-4">
-            <div class="border-2 border-dashed p-8 text-center border-gray-300 cursor-pointer"
+        <div class="p-4 space-y-2">
+            <div class="border-2 border-dashed rounded p-8 text-center border-gray-300 cursor-pointer"
                  @click="$refs.fileInput.click()">
                 <div class="flex justify-center">
                     <div class="w-10 text-gray-300">
@@ -20,41 +22,17 @@
                 <p><span class="font-bold">Drag and drop</span> to upload a file or click to upload manually</p>
             </div>
 
-            <div class="p-2">
-                <input id="fileInput" ref="fileInput" type="file" class="hidden" v-on:change="addFile"/>
-                <label for="authorInput">Author Name</label>
-                <input
-                    id="authorInput"
-                    ref="authorInput"
-                    class="frounded p-1 bg-gray-100"
-                    type="text"
-                    placeholder="Enter author"
-                    v-model="authorName"
-                />
-            </div>
+            <input id="fileInput" ref="fileInput" type="file" class="hidden" v-on:change="addFile" multiple>
 
-            <ul>
-                <li v-for="file in files" class="bg-gray-100 p-2 mt-1 rounded flex">
-                    <span class="flex-grow w-0 break-words">
-                        {{ file.name }}
-                        ({{ file.size | kb }} kb)
-                    </span>
-
-                    <button @click="removeFile(file)" title="Remove" class="w-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                  d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                </li>
+            <ul class="space-y-1">
+                <FileRow v-for="(file, index) in files" :key="index" :file="file" @remove="removeFile(index)"/>
             </ul>
-            <tag-input
-            v-model="tags"
-            />
+
+            <TagInput @tagsChanged="updateTags"/>
 
             <button :disabled="uploadDisabled"
                     @click="upload"
-                    class="w-full p-2 mt-2 text-white rounded"
+                    class="w-full p-2 text-white rounded"
                     :class="uploadDisabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-600'">
                 Upload
             </button>
@@ -64,30 +42,27 @@
 
 <script>
 import TagInput from './TagInput';
+import FileRow from './FileRow';
+
 export default {
     name: 'PhotoUpload',
-    components: {
-        TagInput
-    },
 
-    filters: {
-        kb: function (value) {
-            return Math.floor(value / 1024);
-        },
+    components: {
+        FileRow,
+        TagInput,
     },
 
     data() {
         return {
             files: [],
-            authorName: '',
-            tags: ['hello', 'world'],
+            tags: [],
             uploading: false,
         };
     },
 
     computed: {
         uploadDisabled() {
-            return this.files.length === 0 || this.uploading;
+            return !this.files.length || this.uploading;
         },
     },
 
@@ -104,30 +79,16 @@ export default {
                 return;
             }
 
-            // Only one file please.
-            if (this.files.length >= 1) {
-                alert('Please only upload one file.');
-
-                return;
-            }
-
-            // Only drag one file at a time please.
-            if (droppedFiles.length > 1) {
-                alert('Please only drag one file at a time.');
-
-                return;
-            }
-
             // Add dropped files.
-            _.each([...droppedFiles], file => {
-                if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+            for (const droppedFile of droppedFiles) {
+                if (droppedFile.type !== 'image/jpeg' && droppedFile.type !== 'image/png' && droppedFile.type !== 'image/gif') {
                     alert('Please only upload images.');
 
                     return;
                 }
 
-                this.files.push(file);
-            });
+                this.files.push({ status: 1, data: droppedFile });
+            }
         },
 
         async upload() {
@@ -135,33 +96,36 @@ export default {
                 return;
             }
 
-            let formData = new FormData();
-
-            if (this.files.length !== 1) {
-                return;
-            }
-
-            formData.append('file', this.files[0]);
-            formData.append('author', this.authorName);
-            formData.append('tags', this.tags);
-
             this.uploading = true;
 
-            try {
-                await axios.post('/photos', formData);
+            for (const [index, file] of this.files.entries()) {
+                let formData = new FormData();
 
-                this.uploading = false;
+                formData.append('file', file.data);
+                formData.append('tags', this.tags);
 
-                window.location.href = '/';
-            } catch (error) {
-                console.error(JSON.stringify(e.message));
+                file.status = 2;
+
+                try {
+                    await axios.post('/photos', formData);
+
+                    file.status = 3;
+
+                    setTimeout(() => {
+                        this.files.splice(index, 1);
+                    }, 500);
+                } catch (error) {
+                    file.status = 4;
+
+                    console.error(error);
+                }
             }
+
+            this.uploading = false;
         },
 
-        removeFile(file) {
-            this.files = this.files.filter(f => {
-                return f !== file;
-            });
+        removeFile(index) {
+            this.files.splice(index, 1);
         },
 
         getFiles(event) {
@@ -175,12 +139,10 @@ export default {
 
             return [];
         },
+
+        updateTags(newTags) {
+            this.tags = newTags;
+        },
     },
 };
 </script>
-
-<style scoped>
-.upload-container {
-    /* position: absolute; */
-}
-</style>

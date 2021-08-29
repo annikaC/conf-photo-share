@@ -1,70 +1,61 @@
 <template>
-  <div class='tag-input'>
-    <div v-for='(tag, index) in tags' :key='tag' class='tag-input__tag'>
-      <span @click='removeTag(index)'>x</span>
-      {{ tag }}
+    <div>
+        <input type="text"
+               v-model="tag"
+               placeholder="Enter a Tag"
+               class="w-full border-none rounded p-2 bg-gray-100"
+               @keydown.enter="addTag"
+               @keydown.188="addTag"/>
+
+        <div class="space-x-1 mt-2 flex flex-wrap">
+            <span v-for="(tag, index) in tags" :key="index"
+                  class="rounded-full bg-gray-800 text-gray-200 text-xs font-bold py-1 px-2 flex items-center mb-1">
+                {{ tag }}
+
+                <button @click="removeTag(index)" class="w-3" title="Remove">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </span>
+        </div>
     </div>
-    <input 
-      type='text' 
-      placeholder="Enter a Tag" 
-      class='tag-input__text' 
-      @keydown.enter='addTag' 
-      @keydown.188='addTag'/>
-  </div>
 </template>
+
 <script>
 export default {
-  data () {
-    return {
-      tags: ['hello', 'world']
-    }
-  },
-  methods: {
-      addTag (event) {
-        event.preventDefault()
-        var val = event.target.value.trim()
-        if (val.length > 0) {
-            this.tags.push(val)
-            event.target.value = ''
-        }
-      },
-      removeTag (index) {
-        this.tags.splice(index, 1)
-      }
-  }
-}
+    data() {
+        return {
+            tags: [],
+            tag: '',
+        };
+    },
+
+    methods: {
+        addTag() {
+            let val = this.tag.trim();
+
+            if (val.length === 0) {
+                return;
+            }
+
+            if (this.tags.includes(val)) {
+                this.tag = '';
+
+                return;
+            }
+
+            this.tags.push(val);
+            this.tag = '';
+
+            this.$emit('tagsChanged', this.tags);
+        },
+
+        removeTag(index) {
+            this.tags.splice(index, 1);
+
+            this.$emit('tagsChanged', this.tags);
+        },
+    },
+};
 </script>
-<style scoped>
-.tag-input {
-  width: 100%;
-  border: 1px solid #eee;
-  font-size: 0.9em;
-  height: 50px;
-  box-sizing: border-box;
-  padding: 0 10px;
-}
-
-.tag-input__tag {
-  height: 30px;
-  float: left;
-  margin-right: 10px;
-  background-color: #eee;
-  margin-top: 10px;
-  line-height: 30px;
-  padding: 0 5px;
-  border-radius: 5px;
-}
-
-.tag-input__tag > span {
-  cursor: pointer;
-  opacity: 0.75;
-}
-
-.tag-input__text {
-  border: none;
-  outline: none;
-  font-size: 0.9em;
-  line-height: 50px;
-  background: none;
-}
-</style>

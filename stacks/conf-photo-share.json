@@ -392,74 +392,6 @@
                 }
             }
         },
-        "ElastiCacheSecurityGroup": {
-            "Type": "AWS::EC2::SecurityGroup",
-            "Properties": {
-                "GroupDescription": "Elasticache Security Group",
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "SecurityGroupIngress": [
-                    {
-                        "IpProtocol": "tcp",
-                        "FromPort": "11211",
-                        "ToPort": "11211",
-                        "SourceSecurityGroupId": {
-                            "Fn::GetAtt": [
-                                "InstanceSecurityGroup",
-                                "GroupId"
-                            ]
-                        }
-                    }
-                ],
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "elasticache-sg"
-                    }
-                ]
-            },
-            "DependsOn": [
-                "InstanceSecurityGroup"
-            ]
-        },
-        "ElasticCacheSubnetGroup": {
-            "Type": "AWS::ElastiCache::SubnetGroup",
-            "Properties": {
-                "Description": "ElastiCache Subnet Group",
-                "SubnetIds": [
-                    {
-                        "Ref": "PrivateSubnet1"
-                    },
-                    {
-                        "Ref": "PrivateSubnet2"
-                    },
-                    {
-                        "Ref": "PrivateSubnet3"
-                    }
-                ]
-            }
-        },
-        "ElastiCacheCluster": {
-            "Type": "AWS::ElastiCache::CacheCluster",
-            "Properties": {
-                "AutoMinorVersionUpgrade": "true",
-                "Engine": "memcached",
-                "CacheNodeType": "cache.t3.micro",
-                "CacheSubnetGroupName": {
-                    "Ref": "ElasticCacheSubnetGroup"
-                },
-                "NumCacheNodes": "1",
-                "VpcSecurityGroupIds": [
-                    {
-                        "Fn::GetAtt": [
-                            "ElastiCacheSecurityGroup",
-                            "GroupId"
-                        ]
-                    }
-                ]
-            }
-        },
         "InstanceSecurityGroup": {
             "Type": "AWS::EC2::SecurityGroup",
             "Properties": {
@@ -784,22 +716,12 @@
                     {
                         "Namespace": "aws:elasticbeanstalk:application:environment",
                         "OptionName": "CACHE_DRIVER",
-                        "Value": "memcached"
+                        "Value": "array"
                     },
                     {
                         "Namespace": "aws:elasticbeanstalk:application:environment",
                         "OptionName": "SESSION_DRIVER",
-                        "Value": "memcached"
-                    },
-                    {
-                        "Namespace": "aws:elasticbeanstalk:application:environment",
-                        "OptionName": "MEMCACHED_HOST",
-                        "Value": {
-                            "Fn::GetAtt": [
-                                "ElastiCacheCluster",
-                                "ConfigurationEndpoint.Address"
-                            ]
-                        }
+                        "Value": "database"
                     },
                     {
                         "Namespace": "aws:elasticbeanstalk:application:environment",
@@ -1108,7 +1030,7 @@
                                         "secretsmanager:GetSecretValue"
                                     ],
                                     "Resource": [
-                                        "arn:aws:secretsmanager:eu-west-1:378124860506:secret:PusherSecrets-4wk7pw"
+                                        "arn:aws:secretsmanager:eu-west-1:426493561379:secret:PusherSecrets-foo7D6"
                                     ]
                                 }
                             ]
